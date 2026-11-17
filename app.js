@@ -26,6 +26,7 @@ const lightExitButton = document.querySelector("#lightExitButton");
 const lightStatus = document.querySelector("#lightStatus");
 const lightCount = document.querySelector("#lightCount");
 const lightFreezeButton = document.querySelector("#lightFreezeButton");
+const lightLevel = document.querySelector("#lightLevel");
 
 let audioContext;
 let audioBuffer;
@@ -54,6 +55,34 @@ clearLyricsButton.addEventListener("click", clearLyrics);
 lightButton.addEventListener("click", () => setLightMode(true));
 lightExitButton.addEventListener("click", () => setLightMode(false));
 lightFreezeButton.addEventListener("click", toggleLightFreeze);
+lightLevel.addEventListener("input", () => setLightLevel(Number(lightLevel.value)));
+// Al soltar la barra se suelta el foco: si no, la barra espaciadora quedaría bloqueada.
+lightLevel.addEventListener("change", () => lightLevel.blur());
+
+const LIGHT_LEVEL_KEY = "metronomo.lightLevel";
+
+function setLightLevel(percent) {
+  const clamped = Math.min(200, Math.max(60, percent));
+  lightLevel.value = clamped;
+  lightOverlay.style.setProperty("--light-level", String(clamped / 100));
+  try {
+    localStorage.setItem(LIGHT_LEVEL_KEY, String(clamped));
+  } catch {
+    // Sin almacenamiento (modo privado): sigue funcionando, solo no recuerda el valor.
+  }
+}
+
+function restoreLightLevel() {
+  let saved = NaN;
+  try {
+    saved = Number(localStorage.getItem(LIGHT_LEVEL_KEY));
+  } catch {
+    // Ignorado: se usa el valor por defecto.
+  }
+  setLightLevel(Number.isFinite(saved) && saved > 0 ? saved : 100);
+}
+
+restoreLightLevel();
 
 function toggleLightFreeze() {
   const frozen = lightOverlay.classList.toggle("is-frozen");
@@ -160,6 +189,12 @@ async function startCountIn() {
 function handleKeyboardShortcut(event) {
   if (event.code === "Escape" && !lightOverlay.hidden) {
     setLightMode(false);
+    return;
+  }
+
+  if ((event.code === "ArrowUp" || event.code === "ArrowDown") && !lightOverlay.hidden) {
+    event.preventDefault();
+    setLightLevel(Number(lightLevel.value) + (event.code === "ArrowUp" ? 5 : -5));
     return;
   }
 

@@ -406,8 +406,7 @@ svg {
   justify-content: center;
   padding: 20px;
   overflow: hidden;
-  /* Fondo rojo como el líquido de una lava lamp: más oscuro arriba, más vivo abajo. */
-  background: linear-gradient(180deg, #a30800 0%, #cc1200 32%, #ff3300 70%, #ff4a00 100%);
+  --light-level: 1;
 }
 
 .light-overlay[hidden] {
@@ -418,6 +417,16 @@ svg {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Fondo rojo como el líquido de una lava lamp: más oscuro arriba, más vivo abajo. */
+  background: linear-gradient(180deg, #a30800 0%, #cc1200 32%, #ff3300 70%, #ff4a00 100%);
+  /* Intensidad: afecta solo a la lava, no a la barra de controles. */
+  filter: brightness(var(--light-level)) saturate(calc(0.9 + var(--light-level) * 0.1));
+}
+
+.light-slider {
+  width: 110px;
+  accent-color: #fff3a0;
+  cursor: pointer;
 }
 
 .blob {

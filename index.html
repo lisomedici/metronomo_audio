@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Playback con cuenta</title>
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=5">
   </head>
   <body>
     <main class="app-shell">
@@ -135,12 +135,14 @@
       <div class="light-hud">
         <span id="lightStatus">Sin audio</span>
         <span class="light-count" id="lightCount">0</span>
-        <span class="light-hint">Espacio: iniciar/detener · P: congelar · Esc: salir</span>
+        <label class="light-level-label" for="lightLevel">Brillo</label>
+        <input class="light-slider" id="lightLevel" type="range" min="60" max="200" step="5" value="100" aria-label="Intensidad de la luz">
+        <span class="light-hint">Espacio: iniciar/detener · P: congelar · ↑↓: brillo · Esc: salir</span>
         <button type="button" id="lightFreezeButton">Congelar</button>
         <button type="button" id="lightExitButton">Salir</button>
       </div>
     </div>
 
-    <script src="app.js?v=4"></script>
+    <script src="app.js?v=5"></script>
   </body>
 </html>
